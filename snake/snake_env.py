@@ -58,7 +58,7 @@ class SnakeEnv(gym.Env):
                           (position[0]+10, position[1]+10), (0, 255, 0), 3)
 
         # Takes step after fixed time
-        t_end = time.time() + 0.05
+        t_end = time.time() + 0.005
         k = -1
         while time.time() < t_end:
             if k == -1:
@@ -77,11 +77,12 @@ class SnakeEnv(gym.Env):
         elif button_direction == 3:
             self.snake_head[1] -= 10
 
+        apple_reward = 0
         # Increase Snake length on eating apple
         if self.snake_head == self.apple_position:
-            self.apple_position, self.score = collision_with_apple(
-                self.apple_position, self.score)
+            self.apple_position, self.score = collision_with_apple(self.apple_position, self.score)
             self.snake_position.insert(0, list(self.snake_head))
+            apple_reward = 10000
 
         else:
             self.snake_position.insert(0, list(self.snake_head))
@@ -95,11 +96,11 @@ class SnakeEnv(gym.Env):
                 self.score), (140, 250), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
             cv2.imshow('a', self.img)
             self.done = True
+        
+        euclidean_dist_to_apple = np.linalg.norm(np.array(self.snake_head) - np.array(self.apple_position))
 
-        self.total_reward = len(self.snake_position) - 3  # default length is 3
-        self.reward = self.total_reward - self.prev_reward
-        self.prev_reward = self.total_reward
-
+        self.total_reward = ((250 - euclidean_dist_to_apple) + apple_reward)/100
+        
         if self.done:
             self.reward = -10
         info = {}
@@ -124,7 +125,8 @@ class SnakeEnv(gym.Env):
         self.img = np.zeros((500, 500, 3), dtype='uint8')
         # Initial Snake and Apple position
         self.snake_position = [[250, 250], [240, 250], [230, 250]]
-        self.apple_position = [random.randrange(1, 50)*10, random.randrange(1, 50)*10]
+        self.apple_position = [random.randrange(
+            1, 50)*10, random.randrange(1, 50)*10]
         self.score = 0
         self.prev_button_direction = 1
         self.button_direction = 1

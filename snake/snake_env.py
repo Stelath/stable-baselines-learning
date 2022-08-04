@@ -39,10 +39,10 @@ class SnakeEnv(gym.Env):
         # Define action and observation space
         # They must be gym.spaces objects
         # Example when using discrete actions:
-        self.action_space = spaces.Discrete(N_DISCRETE_ACTIONS)
+        self.action_space = spaces.Discrete(4)
         # Example for using image as input (channel-first; channel-last also works):
         self.observation_space = spaces.Box(low=-500, high=500,
-                                            shape=(5 + SNAKE_LEN_GOAL,), dtype=np.float32)
+                                            shape=(5 + SNAKE_LEN_GOAL,), dtype=np.float64)
 
     def step(self, action):
         self.prev_actions.append(action)
@@ -51,10 +51,11 @@ class SnakeEnv(gym.Env):
         self.img = np.zeros((500, 500, 3), dtype='uint8')
         # Display Apple
         cv2.rectangle(self.img, (self.apple_position[0], self.apple_position[1]), (
-        self.apple_position[0]+10, self.apple_position[1]+10), (0, 0, 255), 3)
-           # Display Snake
+            self.apple_position[0]+10, self.apple_position[1]+10), (0, 0, 255), 3)
+        # Display Snake
         for position in self.snake_position:
-            cv2.rectangle(self.img, (position[0], position[1]), (position[0]+10, position[1]+10), (0, 255, 0), 3)
+            cv2.rectangle(self.img, (position[0], position[1]),
+                          (position[0]+10, position[1]+10), (0, 255, 0), 3)
 
         # Takes step after fixed time
         t_end = time.time() + 0.05
@@ -113,24 +114,25 @@ class SnakeEnv(gym.Env):
         # create observation:
 
         observation = [head_x, head_y, apple_delta_x,
-                        apple_delta_y, snake_length] + list(self.prev_actions)
+                       apple_delta_y, snake_length] + list(self.prev_actions)
         observation = np.array(observation)
-        observation = np.array(self.observation)
-
+        observation = np.array(observation)
 
         return observation, self.reward, self.done, info
 
     def reset(self):
-        self.done = False
-        img = np.zeros((500, 500, 3), dtype='uint8')
+        self.img = np.zeros((500, 500, 3), dtype='uint8')
         # Initial Snake and Apple position
-        snake_position = [[250, 250], [240, 250], [230, 250]]
-        apple_position = [random.randrange(
-            1, 50)*10, random.randrange(1, 50)*10]
-        score = 0
-        prev_button_direction = 1
-        button_direction = 1
-        snake_head = [250, 250]
+        self.snake_position = [[250, 250], [240, 250], [230, 250]]
+        self.apple_position = [random.randrange(1, 50)*10, random.randrange(1, 50)*10]
+        self.score = 0
+        self.prev_button_direction = 1
+        self.button_direction = 1
+        self.snake_head = [250, 250]
+
+        self.prev_reward = 0
+
+        self.done = False
 
         head_x = self.snake_head[0]
         head_y = self.snake_head[1]
@@ -144,7 +146,7 @@ class SnakeEnv(gym.Env):
             self.prev_actions.append(-1)
 
         observation = [head_x, head_y, apple__delta_x,
-                            apple__delta_y, snake_length] + list(self.prev_actions)
+                       apple__delta_y, snake_length] + list(self.prev_actions)
         observation = np.array(observation)
 
         return observation

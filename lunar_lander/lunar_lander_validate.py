@@ -8,7 +8,7 @@ env = gym.make("LunarLander-v2")
 env.reset()
 
 # Load the model
-models_dir = "models/PPO"
+models_dir = "models/PPO_2022-08-03_18-55-27"
 model_number = input("Enter Model Number: ")
 model_path = f"{models_dir}/{model_number}"
 

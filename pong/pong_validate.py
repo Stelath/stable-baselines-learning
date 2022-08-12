@@ -18,7 +18,7 @@ model = PPO.load(f"models/{model_num}")
 env.reset()
 for agent in env.agent_iter():
     obs, reward, done, info = env.last()
-    act, _ = model.predict(obs, deterministic=True)
+    act, _ = model.predict(obs)
     print(act)
     env.step(act)
     env.render()

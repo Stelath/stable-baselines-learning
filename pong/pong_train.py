@@ -30,7 +30,7 @@ env = ss.color_reduction_v0(env, mode='G')      # Use Green Channel in Image for
 env = ss.resize_v1(env, x_size=84, y_size=84)   # Reduce image size to 84 x 84
 env = ss.frame_stack_v1(env, 4)                 # Frame stack to give the ai a better idea of movement speed
 env = ss.pettingzoo_env_to_vec_env_v1(env)      # Convert to Multi Agent Environment
-env = ss.concat_vec_envs_v1(env, 2, num_cpus=1, base_class='stable_baselines3')
+env = ss.concat_vec_envs_v1(env, 8, num_cpus=4, base_class='stable_baselines3')
 env.reset()
 
 # eval_env = deepcopy(env)

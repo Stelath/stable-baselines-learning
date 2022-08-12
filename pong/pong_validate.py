@@ -12,7 +12,8 @@ env = ss.color_reduction_v0(env, mode='G')      # Use Green Channel in Image for
 env = ss.resize_v1(env, x_size=84, y_size=84)   # Reduce image size to 84 x 84
 env = ss.frame_stack_v1(env, 4)                 # Frame stack to give the ai a better idea of movement speed
 
-model = PPO.load("policy")
+model_num = input("Model Num: ")
+model = PPO.load(f"models/{model_num}")
 
 env.reset()
 for agent in env.agent_iter():

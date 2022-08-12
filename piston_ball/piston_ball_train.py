@@ -1,4 +1,3 @@
-from os import cpu_count
 from stable_baselines3 import PPO
 from pettingzoo.butterfly import pistonball_v6
 import supersuit as ss

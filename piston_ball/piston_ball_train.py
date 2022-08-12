@@ -36,5 +36,7 @@ model = PPO(
     clip_range=0.3,
     batch_size=256,
 )
-model.learn(total_timesteps=1000000)
-model.save("policy")
+model.learn(total_timesteps=5000, reset_num_timesteps=False)
+model.save("policy_500000")
+model.learn(total_timesteps=5000, reset_num_timesteps=False)
+model.save("policy_1000000")

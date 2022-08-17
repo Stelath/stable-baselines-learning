@@ -7,7 +7,8 @@ env = ss.color_reduction_v0(env, mode="B")
 env = ss.resize_v1(env, x_size=84, y_size=84)
 env = ss.frame_stack_v1(env, 3)
 
-model = PPO.load("policy")
+model_num = input("Enter Model Num: ")
+model = PPO.load(f"policy_{model_num}")
 
 env.reset()
 for agent in env.agent_iter():

@@ -1,4 +1,5 @@
 from stable_baselines3 import PPO
+from stable_baselines3.ppo import CnnPolicy
 from pettingzoo.butterfly import pistonball_v6
 import supersuit as ss
 
@@ -19,10 +20,10 @@ env = ss.color_reduction_v0(env, mode="B")
 env = ss.resize_v1(env, x_size=84, y_size=84)
 env = ss.frame_stack_v1(env, 3)
 env = ss.pettingzoo_env_to_vec_env_v1(env)
-env = ss.concat_vec_envs_v1(env, 8, num_cpus=4, base_class="stable_baselines3")
+env = ss.concat_vec_envs_v1(env, 4, base_class="stable_baselines3")
 
 model = PPO(
-    'CnnPolicy',
+    CnnPolicy,
     env,
     verbose=3,
     gamma=0.95,
@@ -36,7 +37,7 @@ model = PPO(
     clip_range=0.3,
     batch_size=256,
 )
-model.learn(total_timesteps=5000, reset_num_timesteps=False)
-model.save("policy_500000")
-model.learn(total_timesteps=5000, reset_num_timesteps=False)
-model.save("policy_1000000")
+model.learn(total_timesteps=50000, reset_num_timesteps=False)
+model.save("policy_50000")
+model.learn(total_timesteps=50000, reset_num_timesteps=False)
+model.save("policy_100000")
